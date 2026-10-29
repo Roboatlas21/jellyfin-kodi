@@ -1,6 +1,7 @@
 name: Test Jellyfin-Kodi
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
