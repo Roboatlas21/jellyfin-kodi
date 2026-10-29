@@ -2,6 +2,11 @@ name: Test Jellyfin-Kodi
 
 on:
   workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Branch or commit SHA to validate (optional)
+        required: false
+        type: string
   push:
     branches:
       - master
@@ -18,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         py_version: ["3.9", "3.11", "3.12", "3.13", "3.14"]
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-24.04, windows-latest]
         include:
           - py_version: "3.8"
             os: windows-latest
@@ -27,6 +32,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ inputs.source_ref || github.ref }}
 
       - name: Set up Python ${{ matrix.py_version }}
         uses: actions/setup-python@v7.0.0
@@ -73,6 +80,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ inputs.source_ref || github.ref }}
       - uses: psf/black@stable
         with:
           version: "26.1.0"
